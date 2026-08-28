@@ -380,6 +380,11 @@ def get_gemini_key():
 # ============================================================
 
 def run_gemini_analysis(cve_id, description, cvss, cwe, student):
+    """
+    Returns (result_text, error_message).
+    error_message is now always the REAL underlying error/status,
+    instead of a generic 'SERVER_BUSY' placeholder that hid the cause.
+    """
     api_key = get_gemini_key()
 
     if not api_key:
@@ -387,8 +392,10 @@ def run_gemini_analysis(cve_id, description, cvss, cwe, student):
 
     try:
         client = genai.Client(api_key=api_key)
+    except Exception as error:
+        return None, f"CONFIG_ERROR: Failed to initialise Gemini client: {error}"
 
-        prompt = f"""
+    prompt = f"""
 You are a cybersecurity vulnerability-analysis tutor.
 Your purpose is to help a university student understand vulnerability analysis.
 Do NOT provide instructions for exploiting the vulnerability.
@@ -431,27 +438,52 @@ Provide defensive remediation guidance.
 ## 7. Learning Feedback
 Give three practical recommendations to improve vulnerability-analysis skills.
 """
-        models_to_try = ["gemini-2.5-flash"]
-        max_retries = 3
 
-        for model_name in models_to_try:
-            for attempt in range(max_retries):
-                try:
-                    response = client.models.generate_content(
-                        model=model_name,
-                        contents=prompt
-                    )
-                    return response.text, None
-                except APIError as e:
-                    if getattr(e, "code", None) in [503, 429] and attempt < max_retries - 1:
-                        time.sleep(2 ** attempt)  # Exponential backoff (1s, 2s...)
-                        continue
-                    break
+    models_to_try = ["gemini-2.5-flash"]
+    max_retries = 3
+    last_error = None
 
-        return None, "SERVER_BUSY: Google Gemini services are currently experiencing high demand. Please try again in a few seconds."
+    for model_name in models_to_try:
+        for attempt in range(max_retries):
+            try:
+                response = client.models.generate_content(
+                    model=model_name,
+                    contents=prompt
+                )
+                return response.text, None
 
-    except Exception as error:
-        return None, f"Gemini analysis failed: {error}"
+            except APIError as e:
+                code = getattr(e, "code", None)
+                message = getattr(e, "message", None) or str(e)
+                last_error = f"APIError (code={code}): {message}"
+
+                # Only retry on genuinely transient errors
+                if code in (503, 429) and attempt < max_retries - 1:
+                    time.sleep(2 ** attempt)  # Exponential backoff (1s, 2s...)
+                    continue
+
+                # Non-transient error, or retries exhausted: stop trying this model
+                break
+
+            except Exception as e:
+                # Catch anything the SDK raises that isn't an APIError
+                # (network errors, auth/library issues, etc.)
+                last_error = f"{type(e).__name__}: {e}"
+                break
+
+    if last_error:
+        # Surface the REAL error instead of a generic "server busy" message
+        if "429" in last_error or "RESOURCE_EXHAUSTED" in last_error.upper():
+            return None, f"RATE_LIMIT: You've hit Gemini's rate/quota limit. Details: {last_error}"
+        if "503" in last_error or "UNAVAILABLE" in last_error.upper():
+            return None, f"SERVER_BUSY: Gemini is temporarily overloaded. Details: {last_error}"
+        if "401" in last_error or "PERMISSION_DENIED" in last_error.upper() or "403" in last_error:
+            return None, f"AUTH_ERROR: Your GEMINI_API_KEY was rejected or lacks access. Details: {last_error}"
+        if "404" in last_error or "NOT_FOUND" in last_error.upper():
+            return None, f"MODEL_ERROR: The model name may be invalid/unavailable for your key. Details: {last_error}"
+        return None, f"GEMINI_ERROR: {last_error}"
+
+    return None, "GEMINI_ERROR: Unknown failure — no response and no exception captured."
 
 
 # ============================================================
@@ -631,6 +663,12 @@ if "cve_data" in st.session_state:
                 st.error(ai_error)
                 if ai_error.startswith("CONFIG_ERROR"):
                     st.info("Check that GEMINI_API_KEY is correctly configured in Streamlit Secrets.")
+                elif ai_error.startswith("AUTH_ERROR"):
+                    st.info("Your API key may be invalid, expired, or missing access to the Gemini API. Verify it in Google AI Studio.")
+                elif ai_error.startswith("RATE_LIMIT"):
+                    st.info("You've exceeded your current quota/rate limit. Check your plan and billing details, or wait before retrying.")
+                elif ai_error.startswith("MODEL_ERROR"):
+                    st.info("The requested model may not be available for your API key or region.")
             else:
                 st.session_state["ai_result"] = ai_result
                 st.success("✅ Gemini analysis completed.")
