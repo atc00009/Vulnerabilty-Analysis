@@ -439,11 +439,16 @@ Provide defensive remediation guidance.
 Give three practical recommendations to improve vulnerability-analysis skills.
 """
 
-    models_to_try = ["gemini-2.5-flash"]
+    # gemini-2.5-flash was retired for new API keys (HTTP 404 pointing to
+    # gemini-3.6-flash). Try the current model first, then fall back to
+    # older names in case a given key still has access to them.
+    models_to_try = ["gemini-3.6-flash", "gemini-2.5-flash"]
     max_retries = 3
     last_error = None
 
     for model_name in models_to_try:
+        model_failed_hard = False  # True if this model is unavailable (404) - skip retries, try next model
+
         for attempt in range(max_retries):
             try:
                 response = client.models.generate_content(
@@ -455,12 +460,16 @@ Give three practical recommendations to improve vulnerability-analysis skills.
             except APIError as e:
                 code = getattr(e, "code", None)
                 message = getattr(e, "message", None) or str(e)
-                last_error = f"APIError (code={code}): {message}"
+                last_error = f"APIError (code={code}, model={model_name}): {message}"
 
                 # Only retry on genuinely transient errors
                 if code in (503, 429) and attempt < max_retries - 1:
                     time.sleep(2 ** attempt)  # Exponential backoff (1s, 2s...)
                     continue
+
+                if code == 404:
+                    # Model not available for this key - move on to next model in the list
+                    model_failed_hard = True
 
                 # Non-transient error, or retries exhausted: stop trying this model
                 break
@@ -470,6 +479,10 @@ Give three practical recommendations to improve vulnerability-analysis skills.
                 # (network errors, auth/library issues, etc.)
                 last_error = f"{type(e).__name__}: {e}"
                 break
+
+        if not model_failed_hard and last_error and "code=404" not in last_error:
+            # Non-404 failure (auth, rate limit, etc.) - no point trying other models
+            break
 
     if last_error:
         # Surface the REAL error instead of a generic "server busy" message
