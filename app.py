@@ -2,7 +2,7 @@ import os
 import re
 import requests
 import streamlit as st
-from openai import OpenAI
+from google import genai
 
 # ============================================================
 # PAGE CONFIG
