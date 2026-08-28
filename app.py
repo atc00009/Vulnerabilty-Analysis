@@ -6,7 +6,7 @@ from google import genai
 
 
 # ============================================================
-# PAGE CONFIGURATION
+# PAGE CONFIG
 # ============================================================
 
 st.set_page_config(
@@ -25,18 +25,12 @@ st.markdown(
     """
     <style>
 
-    /* -------------------------------------------------------
+    /* ======================================================
        GLOBAL
-    ------------------------------------------------------- */
+       ====================================================== */
 
     .stApp {
-        background:
-            linear-gradient(
-                135deg,
-                #f8fafc 0%,
-                #eef2ff 50%,
-                #f8fafc 100%
-            );
+        background: #f4f7fb;
     }
 
     .block-container {
@@ -46,78 +40,93 @@ st.markdown(
     }
 
 
-    /* -------------------------------------------------------
+    /* ======================================================
        HERO
-    ------------------------------------------------------- */
+       ====================================================== */
 
     .hero {
-        background:
-            linear-gradient(
-                135deg,
-                #111827,
-                #1e3a8a
-            );
+        background: linear-gradient(
+            135deg,
+            #0f172a,
+            #1e3a8a
+        );
 
         padding: 2.5rem;
 
         border-radius: 24px;
 
-        color: white;
+        color: #ffffff !important;
 
         margin-bottom: 2rem;
 
         box-shadow:
             0 15px 40px
-            rgba(15, 23, 42, 0.18);
+            rgba(15, 23, 42, 0.20);
     }
 
     .hero h1 {
+        color: #ffffff !important;
         font-size: 2.7rem;
-        margin-bottom: 0.5rem;
+        margin-bottom: 0.6rem;
     }
 
     .hero p {
+        color: #e2e8f0 !important;
         font-size: 1.05rem;
         line-height: 1.7;
-        opacity: 0.92;
     }
 
 
-    /* -------------------------------------------------------
+    /* ======================================================
        CARDS
-       ------------------------------------------------------- */
+       ====================================================== */
 
     .card {
 
-        background: white;
+        background: #ffffff !important;
+
+        color: #111827 !important;
+
+        padding: 1.5rem;
+
+        border-radius: 18px;
+
+        border: 1px solid #dbe3ef;
+
+        box-shadow:
+            0 6px 20px
+            rgba(15, 23, 42, 0.07);
+
+        margin-bottom: 1rem;
+    }
+
+    .card h2,
+    .card h3,
+    .card h4,
+    .card p,
+    .card strong,
+    .card li {
+
+        color: #111827 !important;
+
+    }
+
+
+    /* ======================================================
+       METRIC CARDS
+       ====================================================== */
+
+    .metric-card {
+
+        background: #ffffff !important;
+
+        color: #111827 !important;
 
         padding: 1.4rem;
 
         border-radius: 18px;
 
-        border: 1px solid #e5e7eb;
-
-        box-shadow:
-            0 6px 20px
-            rgba(15, 23, 42, 0.06);
-
-        margin-bottom: 1rem;
-    }
-
-
-    /* -------------------------------------------------------
-       METRIC CARDS
-       ------------------------------------------------------- */
-
-    .metric-card {
-
-        background: white;
-
-        padding: 1.3rem;
-
-        border-radius: 18px;
-
-        border: 1px solid #e5e7eb;
+        border: 1px solid #dbe3ef;
 
         text-align: center;
 
@@ -125,39 +134,39 @@ st.markdown(
 
         box-shadow:
             0 6px 20px
-            rgba(15, 23, 42, 0.06);
+            rgba(15, 23, 42, 0.07);
     }
 
     .metric-title {
 
-        font-size: 0.85rem;
+        color: #64748b !important;
 
-        color: #64748b;
+        font-size: 0.85rem;
 
         margin-bottom: 0.5rem;
     }
 
     .metric-value {
 
+        color: #111827 !important;
+
         font-size: 1.55rem;
 
         font-weight: 700;
-
-        color: #111827;
     }
 
 
-    /* -------------------------------------------------------
+    /* ======================================================
        SECTION TITLES
-       ------------------------------------------------------- */
+       ====================================================== */
 
     .section-title {
 
-        font-size: 1.7rem;
+        color: #0f172a !important;
+
+        font-size: 1.75rem;
 
         font-weight: 700;
-
-        color: #111827;
 
         margin-top: 2rem;
 
@@ -165,9 +174,36 @@ st.markdown(
     }
 
 
-    /* -------------------------------------------------------
+    /* ======================================================
+       RESEARCH BOX
+       ====================================================== */
+
+    .research-box {
+
+        background: #eef2ff !important;
+
+        color: #1e293b !important;
+
+        border-left: 5px solid #4f46e5;
+
+        padding: 1.3rem;
+
+        border-radius: 12px;
+
+        margin: 1rem 0;
+    }
+
+    .research-box strong,
+    .research-box p {
+
+        color: #1e293b !important;
+
+    }
+
+
+    /* ======================================================
        SOURCE BADGES
-       ------------------------------------------------------- */
+       ====================================================== */
 
     .source {
 
@@ -177,9 +213,9 @@ st.markdown(
 
         border-radius: 999px;
 
-        background: #e0e7ff;
+        background: #e0e7ff !important;
 
-        color: #3730a3;
+        color: #3730a3 !important;
 
         font-size: 0.8rem;
 
@@ -189,33 +225,77 @@ st.markdown(
     }
 
 
-    /* -------------------------------------------------------
-       INFO BOX
-       ------------------------------------------------------- */
+    /* ======================================================
+       INPUT BOXES
+       ====================================================== */
 
-    .research-box {
+    .stTextInput input,
+    .stNumberInput input,
+    .stTextArea textarea {
 
-        background: #f8fafc;
+        color: #111827 !important;
 
-        border-left: 5px solid #4f46e5;
+        background-color: #ffffff !important;
 
-        padding: 1.2rem;
+        border: 1px solid #cbd5e1 !important;
+    }
 
-        border-radius: 12px;
+    .stTextInput input::placeholder,
+    .stTextArea textarea::placeholder {
 
-        margin: 1rem 0;
+        color: #64748b !important;
+
+        opacity: 1 !important;
     }
 
 
-    /* -------------------------------------------------------
+    /* ======================================================
+       SELECTBOX
+       ====================================================== */
+
+    .stSelectbox label,
+    .stTextInput label,
+    .stNumberInput label,
+    .stTextArea label {
+
+        color: #111827 !important;
+
+        font-weight: 600 !important;
+    }
+
+
+    /* ======================================================
+       GENERAL TEXT
+       ====================================================== */
+
+    .stMarkdown,
+    .stMarkdown p,
+    .stMarkdown li {
+
+        color: #111827;
+    }
+
+
+    /* ======================================================
+       INFO / WARNING
+       ====================================================== */
+
+    .stAlert p {
+
+        color: inherit !important;
+
+    }
+
+
+    /* ======================================================
        FOOTER
-       ------------------------------------------------------- */
+       ====================================================== */
 
     .footer {
 
         text-align: center;
 
-        color: #64748b;
+        color: #64748b !important;
 
         padding: 2rem;
 
@@ -239,7 +319,7 @@ st.markdown(
         <h1>🛡️ AI-Powered Vulnerability Analysis</h1>
 
         <p>
-        Investigate a vulnerability using trusted vulnerability databases,
+        Investigate a CVE using trusted vulnerability databases,
         record your own findings, and compare your analysis with
         an AI-assisted security assessment.
         </p>
@@ -272,21 +352,21 @@ with st.sidebar:
 
         **5️⃣ Submit your findings**
 
-        **6️⃣ Compare with Gemini analysis**
+        **6️⃣ Compare with Gemini**
         """
     )
 
     st.divider()
 
+    st.markdown("### 📚 Research Sources")
+
     st.markdown(
         """
-        ### 📚 Research Sources
-
         🏛️ **NVD**
 
         📚 **CVE Details**
 
-        📄 **CVE / Vendor Advisory**
+        📄 **Vendor Advisory**
 
         🤖 **Gemini AI**
         """
@@ -300,7 +380,7 @@ with st.sidebar:
 
 
 # ============================================================
-# HELPER FUNCTIONS
+# FUNCTIONS
 # ============================================================
 
 def clean_cve(cve):
@@ -315,9 +395,9 @@ def clean_cve(cve):
     return None
 
 
-# ------------------------------------------------------------
+# ============================================================
 # NVD API
-# ------------------------------------------------------------
+# ============================================================
 
 def get_nvd_data(cve_id):
 
@@ -368,9 +448,9 @@ def get_nvd_data(cve_id):
         )
 
 
-# ------------------------------------------------------------
+# ============================================================
 # DESCRIPTION
-# ------------------------------------------------------------
+# ============================================================
 
 def get_description(cve_data):
 
@@ -379,11 +459,11 @@ def get_description(cve_data):
         []
     )
 
-    for description in descriptions:
+    for item in descriptions:
 
-        if description.get("lang") == "en":
+        if item.get("lang") == "en":
 
-            return description.get(
+            return item.get(
                 "value",
                 ""
             )
@@ -391,9 +471,9 @@ def get_description(cve_data):
     return "No English description available."
 
 
-# ------------------------------------------------------------
+# ============================================================
 # CVSS
-# ------------------------------------------------------------
+# ============================================================
 
 def get_cvss(cve_data):
 
@@ -402,7 +482,10 @@ def get_cvss(cve_data):
         {}
     )
 
+    # --------------------------------------------------------
     # CVSS 3.1
+    # --------------------------------------------------------
+
     if metrics.get("cvssMetricV31"):
 
         metric = metrics[
@@ -458,7 +541,11 @@ def get_cvss(cve_data):
                 )
         }
 
-    # CVSS 3.0 fallback
+
+    # --------------------------------------------------------
+    # CVSS 3.0
+    # --------------------------------------------------------
+
     if metrics.get("cvssMetricV30"):
 
         metric = metrics[
@@ -517,9 +604,9 @@ def get_cvss(cve_data):
     return None
 
 
-# ------------------------------------------------------------
+# ============================================================
 # CWE
-# ------------------------------------------------------------
+# ============================================================
 
 def get_cwe(cve_data):
 
@@ -547,9 +634,9 @@ def get_cwe(cve_data):
     return "Not available"
 
 
-# ------------------------------------------------------------
+# ============================================================
 # REFERENCES
-# ------------------------------------------------------------
+# ============================================================
 
 def get_references(cve_data):
 
@@ -563,14 +650,15 @@ def get_references(cve_data):
         url = reference.get("url")
 
         if url:
+
             references.append(url)
 
     return references
 
 
-# ------------------------------------------------------------
-# NVD URL
-# ------------------------------------------------------------
+# ============================================================
+# URLS
+# ============================================================
 
 def nvd_url(cve_id):
 
@@ -579,10 +667,6 @@ def nvd_url(cve_id):
         + cve_id
     )
 
-
-# ------------------------------------------------------------
-# CVE DETAILS URL
-# ------------------------------------------------------------
 
 def cve_details_url(cve_id):
 
@@ -593,13 +677,12 @@ def cve_details_url(cve_id):
     )
 
 
-# ------------------------------------------------------------
-# GEMINI CLIENT
-# ------------------------------------------------------------
+# ============================================================
+# GEMINI API KEY
+# ============================================================
 
 def get_gemini_key():
 
-    # First try Streamlit Secrets
     try:
 
         if "GEMINI_API_KEY" in st.secrets:
@@ -609,17 +692,17 @@ def get_gemini_key():
             ]
 
     except Exception:
+
         pass
 
-    # Then try environment variable
     return os.getenv(
         "GEMINI_API_KEY"
     )
 
 
-# ------------------------------------------------------------
+# ============================================================
 # GEMINI ANALYSIS
-# ------------------------------------------------------------
+# ============================================================
 
 def run_gemini_analysis(
     cve_id,
@@ -637,142 +720,146 @@ def run_gemini_analysis(
             "GEMINI_API_KEY is not configured."
         )
 
+
     try:
 
         client = genai.Client(
             api_key=api_key
         )
 
+
         prompt = f"""
 You are a cybersecurity vulnerability-analysis tutor.
 
-Your role is to help a student understand how to analyse
-a vulnerability. Do not provide offensive exploitation
-instructions.
+Your purpose is to help a university student understand
+vulnerability analysis.
 
-Analyse the following CVE and compare it with the student's
-investigation.
+Do NOT provide instructions for exploiting the vulnerability.
+
+Analyse the CVE information and compare it with the
+student's independent investigation.
 
 ============================================================
-CVE INFORMATION
+CVE
 ============================================================
 
 CVE ID:
 {cve_id}
 
-Description:
+DESCRIPTION:
 {description}
 
 CWE:
 {cwe}
 
-CVSS:
+CVSS INFORMATION:
 {cvss}
+
 
 ============================================================
 STUDENT INVESTIGATION
 ============================================================
 
-Student CVSS Score:
+CVSS SCORE:
 {student["cvss_score"]}
 
-Student Severity:
+CVSS SEVERITY:
 {student["severity"]}
 
-Student Attack Vector:
+ATTACK VECTOR:
 {student["attack_vector"]}
 
-Student Privileges Required:
+PRIVILEGES REQUIRED:
 {student["privileges_required"]}
 
-Student User Interaction:
+USER INTERACTION:
 {student["user_interaction"]}
 
-Student Impact:
+POTENTIAL IMPACT:
 {student["impact"]}
 
-Student Final Risk Rating:
+FINAL RISK RATING:
 {student["risk_rating"]}
 
-Student Justification:
+JUSTIFICATION:
 {student["justification"]}
 
-Student Recommended Mitigation:
+RECOMMENDED MITIGATION:
 {student["mitigation"]}
 
-============================================================
-TASK
-============================================================
 
-Provide an educational vulnerability-analysis report.
-
-Use the following structure:
+============================================================
+REQUIRED ANALYSIS
+============================================================
 
 ## 1. Vulnerability Summary
 
-Explain the vulnerability in clear language.
+Explain the vulnerability in simple language.
 
 ## 2. CVSS Analysis
 
-Explain whether the student's CVSS information agrees
-with the NVD information.
+Explain the CVSS score and the following metrics:
 
-Explain:
 - Attack Vector
+- Attack Complexity
 - Privileges Required
 - User Interaction
-- Severity
+- Scope
+- Confidentiality
+- Integrity
+- Availability
+
+Compare these with the student's findings.
 
 ## 3. Potential Impact
 
-Explain the possible security consequences.
+Explain what could happen if the vulnerability
+were successfully exploited.
 
-## 4. Student Analysis Review
+## 4. Student Investigation Review
 
-Identify:
+Explain:
+
 - What the student identified correctly
 - What needs improvement
-- Any important evidence the student missed
+- Any important information the student missed
 
-Do not simply say "correct" or "incorrect".
-Explain why.
+Use explanations rather than simply saying
+"correct" or "incorrect".
 
 ## 5. Risk Assessment
 
-Discuss whether the student's final risk rating
-is reasonable based on the available evidence.
+Evaluate whether the student's final risk rating
+is reasonable.
 
-Remember that CVSS severity and organisational risk
-are not necessarily identical.
+Explain the difference between CVSS severity
+and overall organisational risk.
 
 ## 6. Recommended Mitigation
 
-Give defensive remediation advice based on the
-vulnerability information.
+Provide defensive remediation guidance.
 
 ## 7. Learning Feedback
 
-Give the student three concise recommendations
-for improving their vulnerability-analysis skills.
+Give three practical recommendations that would
+help the student improve their vulnerability-analysis
+skills.
 
-Keep the explanation suitable for university students.
+Keep the response suitable for university students.
 """
 
-        interaction = client.interactions.create(
 
+        response = client.models.generate_content(
             model="gemini-3.7-flash",
-
-            input=prompt,
-
-            generation_config={
-                "thinking_level": "medium"
-            }
+            contents=prompt
         )
+
 
         return (
-            interaction.output_text,
+            response.text,
             None
         )
+
 
     except Exception as error:
 
@@ -782,7 +869,7 @@ Keep the explanation suitable for university students.
 
 
 # ============================================================
-# 1. CVE SELECTION
+# 1. IDENTIFY CVE
 # ============================================================
 
 st.markdown(
@@ -792,11 +879,14 @@ st.markdown(
     unsafe_allow_html=True
 )
 
+
 st.markdown(
     """
     <div class="card">
 
-    Enter a CVE identifier to begin your investigation.
+    <h3>🔎 Start Your Investigation</h3>
+
+    Enter a CVE identifier below.
 
     <br><br>
 
@@ -823,7 +913,7 @@ search_button = st.button(
 
 
 # ============================================================
-# SEARCH
+# SEARCH NVD
 # ============================================================
 
 if search_button:
@@ -832,22 +922,25 @@ if search_button:
         cve_input
     )
 
+
     if not cve_id:
 
         st.error(
-            "Please enter a valid CVE ID, "
+            "Please enter a valid CVE identifier, "
             "for example CVE-2021-44228."
         )
 
         st.stop()
 
+
     with st.spinner(
-        "🔎 Retrieving vulnerability information from NVD..."
+        "🔎 Searching the NVD database..."
     ):
 
         cve_data, error = get_nvd_data(
             cve_id
         )
+
 
     if error:
 
@@ -855,19 +948,22 @@ if search_button:
 
         st.stop()
 
+
     st.session_state[
         "cve_data"
     ] = cve_data
+
 
     st.session_state[
         "cve_id"
     ] = cve_id
 
-    # Clear previous investigation
+
     st.session_state.pop(
         "student_investigation",
         None
     )
+
 
     st.session_state.pop(
         "ai_result",
@@ -876,7 +972,7 @@ if search_button:
 
 
 # ============================================================
-# DISPLAY CVE
+# DISPLAY RESULTS
 # ============================================================
 
 if "cve_data" in st.session_state:
@@ -889,17 +985,21 @@ if "cve_data" in st.session_state:
         "cve_id"
     ]
 
+
     description = get_description(
         cve_data
     )
+
 
     cvss = get_cvss(
         cve_data
     )
 
+
     cwe = get_cwe(
         cve_data
     )
+
 
     references = get_references(
         cve_data
@@ -943,14 +1043,15 @@ if "cve_data" in st.session_state:
 
 
     # ========================================================
-    # CVSS SUMMARY
+    # CVSS
     # ========================================================
 
     if cvss:
 
         st.markdown(
-            "### 📊 NVD Vulnerability Metrics"
+            "### 📊 CVSS Overview"
         )
+
 
         col1, col2, col3, col4 = st.columns(4)
 
@@ -1043,6 +1144,7 @@ if "cve_data" in st.session_state:
             "### 🔐 CVSS Security Metrics"
         )
 
+
         col1, col2, col3 = st.columns(3)
 
 
@@ -1052,6 +1154,18 @@ if "cve_data" in st.session_state:
                 f"""
                 <div class="card">
 
+                <h4>Attack Conditions</h4>
+
+                <strong>
+                Attack Vector
+                </strong>
+
+                <br>
+
+                {cvss["attack_vector"]}
+
+                <br><br>
+
                 <strong>
                 Attack Complexity
                 </strong>
@@ -1059,16 +1173,6 @@ if "cve_data" in st.session_state:
                 <br>
 
                 {cvss["attack_complexity"]}
-
-                <br><br>
-
-                <strong>
-                Privileges Required
-                </strong>
-
-                <br>
-
-                {cvss["privileges_required"]}
 
                 </div>
                 """,
@@ -1081,6 +1185,18 @@ if "cve_data" in st.session_state:
             st.markdown(
                 f"""
                 <div class="card">
+
+                <h4>Access Requirements</h4>
+
+                <strong>
+                Privileges Required
+                </strong>
+
+                <br>
+
+                {cvss["privileges_required"]}
+
+                <br><br>
 
                 <strong>
                 User Interaction
@@ -1111,6 +1227,8 @@ if "cve_data" in st.session_state:
             st.markdown(
                 f"""
                 <div class="card">
+
+                <h4>Security Impact</h4>
 
                 <strong>
                 Confidentiality
@@ -1151,7 +1269,7 @@ if "cve_data" in st.session_state:
     # ========================================================
 
     st.markdown(
-        "### 🔎 Research Sources"
+        "### 🔎 Research the Vulnerability"
     )
 
 
@@ -1160,16 +1278,16 @@ if "cve_data" in st.session_state:
         <div class="research-box">
 
         <strong>
-        Do not rely on one source only.
+        Important:
         </strong>
+
+        Do not simply copy the automated dashboard results.
 
         <br><br>
 
-        Research the CVE using NVD and CVE Details before
-        completing the Student Investigation.
-
-        Then use the CVE description or vendor advisory
-        to understand the vulnerability and mitigation.
+        Use the research sources below to investigate
+        the CVE independently before completing
+        the Student Investigation.
 
         </div>
         """,
@@ -1180,6 +1298,10 @@ if "cve_data" in st.session_state:
     source1, source2 = st.columns(2)
 
 
+    # --------------------------------------------------------
+    # NVD
+    # --------------------------------------------------------
+
     with source1:
 
         st.markdown(
@@ -1188,23 +1310,17 @@ if "cve_data" in st.session_state:
 
             <h3>🏛️ NVD</h3>
 
-            Use NVD to investigate:
-
-            <br><br>
-
-            • CVSS score<br>
-            • CVSS severity<br>
-            • Attack Vector<br>
-            • Privileges Required<br>
-            • User Interaction<br>
-            • CWE<br>
-            • Affected products<br>
-            • References
+            <p>
+            Use NVD to investigate the CVSS score,
+            severity, attack vector, privileges,
+            user interaction, CWE and affected products.
+            </p>
 
             </div>
             """,
             unsafe_allow_html=True
         )
+
 
         st.link_button(
             "Open NVD Record ↗",
@@ -1212,6 +1328,10 @@ if "cve_data" in st.session_state:
             use_container_width=True
         )
 
+
+    # --------------------------------------------------------
+    # CVE DETAILS
+    # --------------------------------------------------------
 
     with source2:
 
@@ -1221,26 +1341,17 @@ if "cve_data" in st.session_state:
 
             <h3>📚 CVE Details</h3>
 
+            <p>
             Use CVE Details as a second vulnerability
-            database to cross-check your findings.
-
-            <br><br>
-
-            Look for:
-
-            <br>
-
-            • Vendor information<br>
-            • Product information<br>
-            • CVSS information<br>
-            • CWE classification<br>
-            • Vulnerability history<br>
-            • References
+            database to cross-check product information,
+            CVSS information, CWE and vulnerability history.
+            </p>
 
             </div>
             """,
             unsafe_allow_html=True
         )
+
 
         st.link_button(
             "Open CVE Details ↗",
@@ -1265,42 +1376,41 @@ if "cve_data" in st.session_state:
         """
         <div class="card">
 
-        <h3>
-        🔍 Complete your own investigation first
-        </h3>
+        <h3>🔍 Complete Your Own Research</h3>
 
+        <p>
         Complete this section using your
         <strong>own research BEFORE checking the
         automated dashboard results.</strong>
+        </p>
 
-        <br><br>
-
+        <p>
         Use the following sources:
+        </p>
 
-        <br><br>
+        <p>
+        🏛️ <strong>NVD</strong> –
+        CVSS score, severity and CVSS metrics.
+        </p>
 
-        <strong>🏛️ NVD</strong>
-        – CVSS score, severity and CVSS metrics.
-
-        <br>
-
-        <strong>📚 CVE Details</strong>
-        – Cross-check vulnerability, product,
+        <p>
+        📚 <strong>CVE Details</strong> –
+        Cross-check vulnerability, product,
         classification and historical information.
+        </p>
 
-        <br>
+        <p>
+        📄 <strong>CVE / Vendor Advisory</strong> –
+        Understand the vulnerability, potential impact
+        and recommended mitigation.
+        </p>
 
-        <strong>📄 CVE / Vendor Advisory</strong>
-        – Understand the vulnerability,
-        potential impact and recommended mitigation.
-
-        <br><br>
-
+        <p>
         Record your findings below.
-
         After completing your investigation,
         compare your answers with the automated
         dashboard analysis.
+        </p>
 
         </div>
         """,
@@ -1416,9 +1526,9 @@ if "cve_data" in st.session_state:
         "Recommended Mitigation",
 
         placeholder=(
-            "Based on the vendor advisory, NVD or other "
-            "trusted information, explain what should "
-            "be done to reduce or remove the risk."
+            "Based on the vendor advisory, NVD or CVE "
+            "Details, explain what should be done to "
+            "reduce or remove the risk."
         ),
 
         height=140
@@ -1426,7 +1536,7 @@ if "cve_data" in st.session_state:
 
 
     # ========================================================
-    # SUBMIT STUDENT INVESTIGATION
+    # SUBMIT
     # ========================================================
 
     if st.button(
@@ -1511,7 +1621,7 @@ if "cve_data" in st.session_state:
 
 
             st.info(
-                "You can now compare your investigation "
+                "You can now compare your findings "
                 "with the automated dashboard analysis."
             )
 
@@ -1540,15 +1650,13 @@ if "cve_data" in st.session_state:
             """
             <div class="card">
 
-            <h3>
-            🤖 Gemini Vulnerability Analysis
-            </h3>
+            <h3>🤖 Gemini Vulnerability Analysis</h3>
 
-            Your investigation has been completed.
-
-            The automated analysis will now review the
-            vulnerability information and compare it
-            with your investigation.
+            <p>
+            Your independent investigation has been completed.
+            The AI analysis can now be used to compare your
+            findings with the vulnerability evidence.
+            </p>
 
             </div>
             """,
@@ -1606,7 +1714,7 @@ if "cve_data" in st.session_state:
 
 
     # ========================================================
-    # DISPLAY GEMINI RESULT
+    # DISPLAY AI RESULT
     # ========================================================
 
     if "ai_result" in st.session_state:
@@ -1649,50 +1757,46 @@ if "cve_data" in st.session_state:
         )
 
 
-        student = st.session_state[
-            "student_investigation"
-        ]
-
-
         st.markdown(
             """
             <div class="research-box">
 
-            Compare your original investigation with
-            the evidence presented by the automated
-            analysis.
-
-            Ask yourself:
+            <strong>Reflect on your investigation:</strong>
 
             <br><br>
 
-            • Did I identify the correct CVSS information?
+            • Did you identify the correct CVSS information?
 
             <br>
 
-            • Did I understand the attack vector?
+            • Did you understand the attack vector?
 
             <br>
 
-            • Did I correctly interpret privileges and
-            user interaction?
+            • Did you correctly interpret privileges
+            and user interaction?
 
             <br>
 
-            • Did I understand the potential impact?
+            • Did you understand the potential impact?
 
             <br>
 
-            • Is my final risk rating justified?
+            • Is your final risk rating justified?
 
             <br>
 
-            • Is my mitigation appropriate?
+            • Is your mitigation appropriate?
 
             </div>
             """,
             unsafe_allow_html=True
         )
+
+
+        student = st.session_state[
+            "student_investigation"
+        ]
 
 
         comparison_data = {
