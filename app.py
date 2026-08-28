@@ -20,14 +20,14 @@ st.set_page_config(
 
 
 # ============================================================
-# CUSTOM CSS
+# CUSTOM CSS (WITH FIXED SIDEBAR CONTRAST)
 # ============================================================
 
 st.markdown(
     """
     <style>
 
-    /* GLOBAL */
+    /* GLOBAL BACKGROUND & CONTAINER */
     .stApp {
         background: #f4f7fb;
     }
@@ -36,6 +36,26 @@ st.markdown(
         max-width: 1200px;
         padding-top: 2rem;
         padding-bottom: 4rem;
+    }
+
+    /* SIDEBAR CONTRAST FIX */
+    [data-testid="stSidebar"] {
+        background-color: #1e293b !important;
+    }
+
+    [data-testid="stSidebar"] *, 
+    [data-testid="stSidebar"] p, 
+    [data-testid="stSidebar"] h1, 
+    [data-testid="stSidebar"] h2, 
+    [data-testid="stSidebar"] h3, 
+    [data-testid="stSidebar"] li, 
+    [data-testid="stSidebar"] span,
+    [data-testid="stSidebar"] caption {
+        color: #f8fafc !important;
+    }
+
+    [data-testid="stSidebar"] hr {
+        border-color: #334155 !important;
     }
 
     /* HERO */
@@ -64,7 +84,7 @@ st.markdown(
         line-height: 1.7;
     }
 
-    /* CARDS */
+    /* MAIN CONTENT CARDS */
     .card {
         background: #ffffff !important;
         color: #111827 !important;
@@ -138,30 +158,28 @@ st.markdown(
         margin-right: 0.4rem;
     }
 
-    /* INPUT BOXES */
-    .stTextInput input, .stNumberInput input, .stTextArea textarea {
+    /* MAIN BODY INPUT BOXES */
+    .main .stTextInput input, 
+    .main .stNumberInput input, 
+    .main .stTextArea textarea {
         color: #111827 !important;
         background-color: #ffffff !important;
         border: 1px solid #cbd5e1 !important;
     }
 
-    .stTextInput input::placeholder, .stTextArea textarea::placeholder {
-        color: #64748b !important;
-        opacity: 1 !important;
-    }
-
-    .stSelectbox label, .stTextInput label, .stNumberInput label, .stTextArea label {
+    .main .stSelectbox label, 
+    .main .stTextInput label, 
+    .main .stNumberInput label, 
+    .main .stTextArea label {
         color: #111827 !important;
         font-weight: 600 !important;
     }
 
-    /* GENERAL TEXT */
-    .stMarkdown, .stMarkdown p, .stMarkdown li {
+    /* MAIN BODY MARKDOWN TEXT */
+    .main .stMarkdown, 
+    .main .stMarkdown p, 
+    .main .stMarkdown li {
         color: #111827;
-    }
-
-    .stAlert p {
-        color: inherit !important;
     }
 
     /* FOOTER */
@@ -358,7 +376,7 @@ def get_gemini_key():
 
 
 # ============================================================
-# GEMINI ANALYSIS (WITH RETRIES & FALLBACKS)
+# GEMINI ANALYSIS (RETRY & FALLBACK LOGIC)
 # ============================================================
 
 def run_gemini_analysis(cve_id, description, cvss, cwe, student):
@@ -425,13 +443,12 @@ Give three practical recommendations to improve vulnerability-analysis skills.
                     )
                     return response.text, None
                 except APIError as e:
-                    # Retry on temporary high demand (503) or rate limits (429)
                     if getattr(e, "code", None) in [503, 429] and attempt < max_retries - 1:
-                        time.sleep(2 ** attempt)  # Wait 1s, 2s, 4s...
+                        time.sleep(2 ** attempt)  # Exponential backoff (1s, 2s...)
                         continue
                     break
 
-        return None, "SERVER_BUSY: Google Gemini is experiencing temporary high demand. Please try again in a few seconds."
+        return None, "SERVER_BUSY: Google Gemini services are currently experiencing high demand. Please try again in a few seconds."
 
     except Exception as error:
         return None, f"Gemini analysis failed: {error}"
@@ -544,7 +561,7 @@ if "cve_data" in st.session_state:
         st.link_button("Open CVE Details ↗", cve_details_url(cve_id), use_container_width=True)
 
     # ========================================================
-    # 3. STUDENT INVESTIGATION (WITH FORM PREVENTING RE-RENDERS)
+    # 3. STUDENT INVESTIGATION FORM
     # ========================================================
 
     st.markdown('<div class="section-title">3️⃣ Student Investigation</div>', unsafe_allow_html=True)
